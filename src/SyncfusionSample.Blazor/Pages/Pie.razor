@@ -1,0 +1,36 @@
+﻿@page "/pie"
+@using Syncfusion.Blazor.Charts
+
+<SfAccumulationChart Title="Product count statistics">
+    <AccumulationChartSeriesCollection>
+        <AccumulationChartSeries DataSource="@StatisticsDetails" XName="Browser" YName="Users"
+                                 Name="Browser">
+                                 <AccumulationDataLabelSettings Visible="true"/>
+        </AccumulationChartSeries>
+    </AccumulationChartSeriesCollection>
+    <AccumulationChartTooltipSettings Enable="true"></AccumulationChartTooltipSettings>
+    <AccumulationChartLegendSettings Visible="true"></AccumulationChartLegendSettings>
+
+</SfAccumulationChart>
+<style>
+    .pie-chart .e-tooltip-wrap.e-popup-open {
+        display: block !important;
+    }
+</style>
+@code {
+    public class Statistics
+    {
+        public string Browser { get; set; }
+        public double Users { get; set; }
+    }
+
+    public List<Statistics> StatisticsDetails = new List<Statistics>
+    {
+        new Statistics { Browser = "Electronics", Users = 37 },
+        new Statistics { Browser = "Fashion", Users = 17 },
+        new Statistics { Browser = "Bottles", Users = 19 },
+        new Statistics { Browser = "Stationary", Users = 4  },
+        new Statistics { Browser = "Home Appliances", Users = 11 },
+        new Statistics { Browser = "Toys", Users = 12 },
+    };
+}

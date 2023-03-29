@@ -1,0 +1,64 @@
+﻿@page "/projects"
+@inherits SyncfusionSampleComponentBase
+@using SyncfusionSample.Projects
+@using SyncfusionSample.Localization
+@using Microsoft.Extensions.Localization
+@using System.Globalization
+@inject IStringLocalizer<SyncfusionSampleResource> L
+<h3>Projects</h3>
+
+@if (LoadingProjects)
+{
+    <span>Loading...</span>
+}
+else
+{
+    <SfButton OnClick="@OpenCreateProjectModalAsync" IsPrimary="true">Add your new Project here</SfButton>
+    <SfGrid DataSource="@ProjectList" AllowPaging="true"  >
+        <GridPageSettings PageSizes="true" PageSize="5"></GridPageSettings>
+        <GridColumns>
+            <GridColumn Field="@nameof( ProjectDto.Name )" HeaderText="Name" />
+            <GridColumn Field="@nameof( ProjectDto.Description)" HeaderText="Description" />
+            <GridColumn Field="@nameof( ProjectDto.URL)" HeaderText="Link" />
+            
+            <GridColumn Width="300px">
+                <Template>
+
+
+                    <SfButton OnClick="@(()=>OpenEditingProjectModalAsync(context as ProjectDto))">Edit</SfButton>
+                    <SfButton OnClick="@(()=>DeleteProjectAsync(context as ProjectDto))">Delete</SfButton>
+
+                </Template>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+    <SfDialog @bind-Visible="@NewDialogOpenProject" Width="500px">
+        <DialogTemplates>
+            <Header>Enter the details of your new project</Header>
+            <Content>
+                <SfTextBox @bind-Value="@NewProjectDto.Name" Placeholder='Project Name' FloatLabelType='FloatLabelType.Auto' />
+                <SfTextBox @bind-Value="@NewProjectDto.Description" Placeholder='Project Description' FloatLabelType='FloatLabelType.Auto' />
+                <SfTextBox @bind-Value="@NewProjectDto.URL" Placeholder='Project link' FloatLabelType='FloatLabelType.Auto' />
+
+            </Content>
+        </DialogTemplates>
+        <DialogButtons>
+            <DialogButton Content="Cancel" OnClick="@(e => { NewDialogOpenProject = false; })" />
+            <DialogButton Content="Create" OnClick="@CreateProjectAsync" IsPrimary="true" />
+        </DialogButtons>
+    </SfDialog>
+    <SfDialog @bind-Visible="@EditingDialogOpenProject" Width="500px">
+        <DialogTemplates>
+            <Header>Edit your project</Header>
+            <Content>
+                <SfTextBox @bind-Value="@EditingProjectDto.Name" Placeholder='Project Name' FloatLabelType='FloatLabelType.Auto' />
+                <SfTextBox @bind-Value="@EditingProjectDto.Description" Placeholder='Project Description' FloatLabelType='FloatLabelType.Auto' />
+                <SfTextBox @bind-Value="@EditingProjectDto.URL" Placeholder='Project link' FloatLabelType='FloatLabelType.Auto' />
+            </Content>
+        </DialogTemplates>
+        <DialogButtons>
+            <DialogButton Content="Cancel" OnClick="@(e => { EditingDialogOpenProject = false; })" />
+            <DialogButton Content="Update" OnClick="@UpdateProjectAsync" IsPrimary="true" />
+        </DialogButtons>
+    </SfDialog>
+}

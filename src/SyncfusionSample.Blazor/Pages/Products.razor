@@ -1,0 +1,69 @@
+﻿@page "/products"
+@inherits SyncfusionSampleComponentBase
+@using SyncfusionSample.Products
+@using SyncfusionSample.Localization
+@using Microsoft.Extensions.Localization
+@using System.Globalization
+@inject IStringLocalizer<SyncfusionSampleResource> L
+
+<h3>Products</h3>
+
+@if (Loading)
+{
+    <span>Loading...</span>
+}
+else
+{
+    @if (CanCreateProduct)
+    {
+        <SfButton OnClick="@OpenCreateProductModalAsync" IsPrimary="true" >Add your new Product here</SfButton>
+    }
+    <SfGrid DataSource="@ProductList" AllowPaging="true">
+        <GridPageSettings PageSizes="true" PageSize="5"></GridPageSettings>
+        <GridColumns>
+            <GridColumn Field="@nameof( ProductDto.Name )" HeaderText="Name" />
+            <GridColumn Field="@nameof( ProductDto.Description)" HeaderText="Description" />
+            <GridColumn Field="@nameof( ProductDto.Price )" HeaderText="Price" />
+            <GridColumn Width="200px">
+                <Template>
+                    @if (CanEditProduct) {           
+                        <SfButton OnClick="@(()=>OpenEditingProductModalAsync(context as ProductDto))">Edit</SfButton>
+                             }
+                      @if(CanDeleteProduct){
+                        <SfButton OnClick="@(()=>DeleteAsync(context as ProductDto))">Delete</SfButton>
+                      }
+                </Template>
+            </GridColumn>
+        </GridColumns>
+    </SfGrid>
+
+    <SfDialog @bind-Visible="@NewDialogOpen" Width="500px">
+        <DialogTemplates>
+            <Header>Enter the details of your new product</Header>
+            <Content>
+                <SfTextBox @bind-Value="@NewProductDto.Name" Placeholder='Product Name' FloatLabelType='FloatLabelType.Auto' />
+                <SfTextBox @bind-Value="@NewProductDto.Description" Placeholder='Product Description' FloatLabelType='FloatLabelType.Auto' />
+                <SfNumericTextBox TValue="float" @bind-Value="@NewProductDto.Price" Placeholder="Price" FloatLabelType="FloatLabelType.Auto" />
+            </Content>
+        </DialogTemplates>
+        <DialogButtons>
+            <DialogButton Content="Cancel" OnClick="@(e => { NewDialogOpen = false; })" />
+            <DialogButton Content="Create" OnClick="@CreateAsync" IsPrimary="true" />
+        </DialogButtons>
+    </SfDialog>
+
+    <SfDialog @bind-Visible="@EditingDialogOpen" Width="500px">
+        <DialogTemplates>
+            <Header>Edit your product</Header>
+            <Content>
+                <SfTextBox @bind-Value="@EditingProductDto.Name" Placeholder='Product Name' FloatLabelType='FloatLabelType.Auto' />
+                <SfTextBox @bind-Value="@EditingProductDto.Description" Placeholder='Product Description' FloatLabelType='FloatLabelType.Auto' />
+                <SfNumericTextBox TValue="float" @bind-Value="@EditingProductDto.Price" Placeholder="Price" FloatLabelType="FloatLabelType.Auto" />
+               </Content>
+        </DialogTemplates>
+        <DialogButtons>
+            <DialogButton Content="Cancel" OnClick="@(e => { EditingDialogOpen = false; })" />
+            <DialogButton Content="Update" OnClick="@UpdateAsync" IsPrimary="true" />
+        </DialogButtons>
+    </SfDialog>
+}
